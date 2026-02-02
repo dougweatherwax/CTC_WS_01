@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Clothe to Care</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <h1>Clothe to Care</h1>
+                    <p class="tagline">Serving Katy & Fulshear</p>
+                </div>
+                <button class="mobile-menu-toggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="donate.html">Donate</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>We'd love to hear from you. Get in touch with Clothe to Care today!</p>
+        </div>
+    </section>
+
+    <!-- Contact Content -->
+    <section class="page-content">
+        <div class="container">
+            <div class="content-section">
+                <h2 style="text-align: center;">Get In Touch</h2>
+                <p style="text-align: center; max-width: 700px; margin: 0 auto 3rem;">
+                    Whether you have questions about donating, want to volunteer, or need clothing assistance, 
+                    we're here to help. Fill out the form below or use the contact information provided.
+                </p>
+
+                <!-- Contact Form -->
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">-- Please Select --</option>
+                                <option value="donation">I want to donate clothing</option>
+                                <option value="pickup">Schedule a pickup</option>
+                                <option value="volunteer">Volunteer opportunities</option>
+                                <option value="drive">Organize a clothing drive</option>
+                                <option value="assistance">I need clothing assistance</option>
+                                <option value="partnership">Business partnership</option>
+                                <option value="other">Other inquiry</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn">Send Message</button>
+                    </form>
+                    <div id="formMessage" style="display: none; margin-top: 1rem; padding: 1rem; border-radius: 5px; text-align: center;"></div>
+                </div>
+            </div>
+
+            <!-- Contact Info Cards -->
+            <div class="content-section" style="margin-top: 4rem;">
+                <h2 style="text-align: center; margin-bottom: 3rem;">Other Ways to Reach Us</h2>
+                <div class="donation-options">
+                    <div class="donation-card">
+                        <h3>📧 Email</h3>
+                        <p><a href="mailto:info@clothetocare.org" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">info@clothetocare.org</a></p>
+                        <p style="margin-top: 1rem; font-size: 0.95rem;">
+                            For general inquiries, donation questions, or volunteer information.
+                        </p>
+                    </div>
+
+                    <div class="donation-card">
+                        <h3>📍 Service Area</h3>
+                        <p style="font-weight: 600;">Katy & Fulshear, Texas</p>
+                        <p style="margin-top: 1rem; font-size: 0.95rem;">
+                            We proudly serve the Katy and Fulshear communities and surrounding areas.
+                        </p>
+                    </div>
+
+                    <div class="donation-card">
+                        <h3>🤝 Partnership</h3>
+                        <p style="font-weight: 600;">Family Hope</p>
+                        <p style="margin-top: 1rem; font-size: 0.95rem;">
+                            Distribution partner helping us serve families in need throughout the community.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="content-section" style="margin-top: 4rem;">
+                <h2>Frequently Asked Questions</h2>
+                <div style="margin-top: 2rem;">
+                    <div class="faq-item" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e0;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Where can I drop off donations?</h3>
+                        <p>
+                            We have several drop-off locations throughout Katy and Fulshear. Contact us via email or the 
+                            form above to find the nearest location and current hours of operation.
+                        </p>
+                    </div>
+
+                    <div class="faq-item" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e0;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Do you offer pickup services?</h3>
+                        <p>
+                            Yes! We offer pickup services for large donations in the Katy and Fulshear areas. Please contact 
+                            us to schedule a convenient time. We'll need at least a week's notice to arrange pickup.
+                        </p>
+                    </div>
+
+                    <div class="faq-item" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e0;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">How can I volunteer?</h3>
+                        <p>
+                            We welcome volunteers! Opportunities include sorting donations, organizing clothing drives, and 
+                            assisting with distribution. Fill out the contact form above selecting "Volunteer opportunities" 
+                            and we'll get back to you with current needs and scheduling.
+                        </p>
+                    </div>
+
+                    <div class="faq-item" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e0;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">I need clothing assistance. How do I get help?</h3>
+                        <p>
+                            We work in partnership with Family Hope to identify and serve families in need. Please contact us 
+                            or reach out to Family Hope directly. All requests are handled with dignity and confidentiality.
+                        </p>
+                    </div>
+
+                    <div class="faq-item" style="margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 1px solid #e0e0e0;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">Can my business or organization partner with you?</h3>
+                        <p>
+                            Absolutely! We partner with local businesses, schools, churches, and community organizations. 
+                            You can host a collection box, organize a clothing drive, or support us in other ways. 
+                            Contact us to discuss partnership opportunities.
+                        </p>
+                    </div>
+
+                    <div class="faq-item" style="margin-bottom: 2rem;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">What items do you accept?</h3>
+                        <p>
+                            We accept gently used clothing for all ages, shoes, and accessories. All items should be clean 
+                            and in good condition. Visit our <a href="donate.html" style="color: var(--primary-color); font-weight: 600;">Donate page</a> 
+                            for detailed guidelines on what we can accept.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hours Section -->
+            <div class="content-section" style="background: var(--light-color); padding: 2rem; border-radius: 10px; text-align: center;">
+                <h2>Drop-Off Hours</h2>
+                <p style="margin-top: 1rem; font-size: 1.1rem;">
+                    Drop-off hours vary by location. Please contact us to confirm hours and find the nearest drop-off point.
+                </p>
+                <p style="margin-top: 1rem;">
+                    <strong>Note:</strong> We accept donations year-round, but hours may vary during holidays.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta">
+        <div class="container">
+            <h2>Thank You for Reaching Out</h2>
+            <p>We typically respond within 1-2 business days. Your support means everything to our community!</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Clothe to Care</h3>
+                    <p>Serving Katy & Fulshear, Texas</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="donate.html">Donate</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: info@clothetocare.org</p>
+                    <p>Serving Katy & Fulshear, TX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Clothe to Care. All rights reserved. | A non-profit organization serving the community.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

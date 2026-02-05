@@ -2,6 +2,20 @@
 
 This guide explains how to deploy the Clothe to Care website to Amazon Web Services (AWS).
 
+## Quick Start
+
+The fastest way to deploy with production-ready settings:
+
+```bash
+# 1. Make sure you're in the project root directory
+cd /path/to/CTC_WS_01
+
+# 2. Deploy with CloudFormation (Production Recommended)
+./deploy-to-aws.sh clothetocare-website us-east-1 default true
+
+# Your website will be live with HTTPS, CDN, and security best practices!
+```
+
 ## Prerequisites
 
 1. **AWS Account**: Create an account at [aws.amazon.com](https://aws.amazon.com)
@@ -31,37 +45,52 @@ This guide explains how to deploy the Clothe to Care website to Amazon Web Servi
 
 ## Deployment Options
 
-### Option 1: Quick Deployment with Script (Recommended)
+### Option 1: Quick Deployment with CloudFormation (RECOMMENDED)
 
-1. **Edit the deployment script** to configure your settings:
+**Best for:** Production deployments with maximum performance and security.
+
+Includes: CloudFront CDN, HTTPS, Origin Access Identity, automatic caching, security headers.
+
+1. **Run the deployment script**:
    ```bash
-   nano deploy-to-aws.sh
-   ```
-   Update these variables:
-   - `BUCKET_NAME`: Your desired S3 bucket name (must be globally unique)
-   - `REGION`: Your preferred AWS region (e.g., `us-east-1`)
-   - `PROFILE`: Your AWS CLI profile name (default: `default`)
-
-2. **Run the deployment script**:
-   ```bash
-   ./deploy-to-aws.sh
+   ./deploy-to-aws.sh clothetocare-website us-east-1 default true
    ```
 
-3. **Access your website** at the URL provided by the script:
-   ```
-   http://your-bucket-name.s3-website-region.amazonaws.com
-   ```
+2. **Script arguments** (all optional):
+   - `clothetocare-website` - S3 bucket name (must be globally unique)
+   - `us-east-1` - AWS region
+   - `default` - AWS CLI profile name
+   - `true` - Use CloudFormation deployment
 
-### Option 2: CloudFormation Deployment (Infrastructure as Code)
+3. **Access your website** at the URL provided by the script (HTTPS CloudFront URL)
 
-For a more robust setup with CloudFront CDN:
+### Option 2: Simple S3 Deployment
+
+**Best for:** Development or testing environments.
+
+Uses public S3 bucket hosting (not recommended for production).
+
+```bash
+./deploy-to-aws.sh
+```
+
+This will:
+- Create an S3 bucket
+- Enable static website hosting
+- Upload your website files
+- Output the S3 website URL (HTTP only)
+
+### Option 3: Manual CloudFormation Deployment
+
+For more control, deploy CloudFormation directly:
 
 1. **Deploy using CloudFormation**:
    ```bash
    aws cloudformation create-stack \
      --stack-name clothetocare-website \
      --template-body file://aws/cloudformation-template.yaml \
-     --parameters ParameterKey=BucketName,ParameterValue=your-unique-bucket-name \
+     --parameters ParameterKey=BucketName,ParameterValue=clothetocare-website \
+                  ParameterKey=DomainName,ParameterValue='' \
      --region us-east-1
    ```
 
@@ -89,15 +118,320 @@ For a more robust setup with CloudFront CDN:
      --query 'Stacks[0].Outputs'
    ```
 
-### Option 3: Manual AWS Console Deployment
+### Option 4: Manual AWS Console Deployment
+
+If you prefer using the AWS Console:
 
 1. **Create S3 Bucket**:
    - Go to [S3 Console](https://console.aws.amazon.com/s3/)
    - Click "Create bucket"
    - Enter a unique bucket name
    - Choose your region
-   - Uncheck "Block all public access"
-   - Create the bucket
+   - Click "Create bucket"
+
+2. **Enable Static Website Hosting**:
+   - Select your bucket
+   - Go to "Properties" tab
+   - Enable "Static website hosting"
+   - Set index document to `index.html`
+   - Set error document to `404.html`
+
+3. **Block Public Access** (Important for Security):
+   - Go to "Permissions" tab
+   - Click "Block public access (bucket settings)"
+   - Check all options (very important!)
+   - Confirm changes
+
+4. **Create CloudFormation Stack**:
+   - Use template from `aws/cloudformation-template.yaml`
+   - This sets up CloudFront distribution with proper security
+
+5. **Upload Website Files**:
+   - In S3 Console, upload contents of `Website/` folder
+   - Or use AWS CLI: `aws s3 sync Website/ s3://bucket-name --delete`
+
+## Deployment Flowchart
+
+```
+Start Deployment
+    |
+    v
+Verify AWS Credentials
+    |
+    +---> Option 1: CloudFormation [RECOMMENDED]
+    |        - More secure
+    |        - CDN enabled
+    |        - HTTPS ready
+    |        - Better performance
+    |
+    +---> Option 2: Simple S3
+    |        - Faster deployment
+    |        - HTTP only
+    |        - Not production ready
+    |
+    +---> Option 3: Manual CloudFormation
+    |        - More control
+    |        - Slower process
+    |
+    v
+Upload Files to S3
+    |
+    v
+Configure Cache Headers
+    |
+    v
+✅ Website Live!
+```
+
+## What Gets Deployed
+
+The deployment script uploads and configures:
+
+```
+Website Files:
+├── index.html          → Cached for 1 hour
+├── about.html          → Cached for 1 hour
+├── donate.html         → Cached for 1 hour
+├── contact.html        → Cached for 1 hour
+├── events.html         → Cached for 1 hour
+├── 404.html           → Cached for 1 hour
+├── css/
+│   └── style.css      → Cached for 1 year
+├── js/
+│   └── script.js      → Cached for 1 year
+└── images/
+    └── logo.jpg       → Cached for 1 year
+
+CloudFront Distribution (CloudFormation only):
+├── Origin Access Identity → Secures S3 bucket
+├── Caching Policies       → Optimized TTLs
+├── Security Headers       → Protection against attacks
+└── HTTPS                  → Automatic encryption
+```
+
+## Testing Your Deployment
+
+### Test Website Availability
+
+```bash
+# Get CloudFront URL
+CLOUDFRONT_URL=$(aws cloudformation describe-stacks \
+  --stack-name clothetocare-website \
+  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontURL`].OutputValue' \
+  --output text)
+
+# Test the URL
+curl -I https://$CLOUDFRONT_URL
+```
+
+### Test with Different Pages
+
+```bash
+# Homepage
+curl https://$CLOUDFRONT_URL
+
+# About page
+curl https://$CLOUDFRONT_URL/about.html
+
+# Non-existent page (should return 404.html)
+curl https://$CLOUDFRONT_URL/nonexistent.html
+```
+
+### Monitor CloudWatch Metrics
+
+```bash
+# Get distribution ID
+DIST_ID=$(aws cloudformation describe-stacks \
+  --stack-name clothetocare-website \
+  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' \
+  --output text)
+
+# View recent requests
+aws cloudwatch get-metric-statistics \
+  --namespace AWS/CloudFront \
+  --metric-name Requests \
+  --dimensions Name=DistributionId,Value=$DIST_ID \
+  --start-time $(date -d '1 day ago' -u +%Y-%m-%dT%H:%M:%S)Z \
+  --end-time $(date -u +%Y-%m-%dT%H:%M:%S)Z \
+  --period 3600 \
+  --statistics Sum
+```
+
+## Post-Deployment Tasks
+
+### 1. Set Up Custom Domain (Optional)
+
+```bash
+# Add domain parameter to CloudFormation
+aws cloudformation update-stack \
+  --stack-name clothetocare-website \
+  --template-body file://aws/cloudformation-template.yaml \
+  --parameters ParameterKey=DomainName,ParameterValue=clothetocare.org
+```
+
+### 2. Set Up SSL Certificate
+
+Free certificates are available through AWS Certificate Manager:
+
+```bash
+# Request certificate
+aws acm request-certificate \
+  --domain-name clothetocare.org
+```
+
+### 3. Configure Route 53 (Optional)
+
+Route traffic to your CloudFront distribution:
+
+```bash
+# Create DNS record pointing to CloudFront
+aws route53 change-resource-record-sets \
+  --hosted-zone-id YOUR_ZONE_ID \
+  --change-batch file://dns-changes.json
+```
+
+### 4. Invalidate Cache After Updates
+
+```bash
+DIST_ID=$(aws cloudformation describe-stacks \
+  --stack-name clothetocare-website \
+  --query 'Stacks[0].Outputs[?OutputKey==`CloudFrontDistributionId`].OutputValue' \
+  --output text)
+
+aws cloudfront create-invalidation \
+  --distribution-id $DIST_ID \
+  --paths "/*"
+```
+
+## Monitoring and Maintenance
+
+### View Deployment Status
+
+```bash
+# Check CloudFormation stack status
+aws cloudformation describe-stacks \
+  --stack-name clothetocare-website
+```
+
+### Monitor Website Traffic
+
+```bash
+# View CloudFront metrics
+aws cloudwatch list-metrics \
+  --namespace AWS/CloudFront
+```
+
+### View Recent Errors
+
+```bash
+# Check CloudFormation events
+aws cloudformation describe-stack-events \
+  --stack-name clothetocare-website \
+  --query 'StackEvents[?contains(LogicalResourceId, `clothetocare`)]'
+```
+
+## Troubleshooting
+
+### Issue: Bucket name is not available
+
+**Solution:** S3 bucket names must be globally unique. Try adding your initials or date:
+- `clothetocare-website-abc-2026`
+- `clothetocare-org-2026`
+
+### Issue: CloudFormation stack creation failed
+
+**Solution:**
+1. Check the CloudFormation events: `aws cloudformation describe-stack-events --stack-name clothetocare-website`
+2. Verify your AWS credentials have sufficient permissions
+3. Ensure your region supports all resources
+
+### Issue: Website shows 404 for valid pages
+
+**Solution:**
+1. Verify files were uploaded: `aws s3 ls s3://your-bucket-name/ --recursive`
+2. Check CloudFront origin settings
+3. Invalidate cache: `aws cloudfront create-invalidation --distribution-id DIST_ID --paths "/*"`
+
+### Issue: Old content is still showing
+
+**Solution:** Clear CloudFront cache after updating:
+```bash
+aws cloudfront create-invalidation \
+  --distribution-id YOUR_DISTRIBUTION_ID \
+  --paths "/*"
+```
+
+### Issue: High AWS costs
+
+**Solution:**
+- Review and optimize cache TTLs
+- Use CloudFront PriceClass_100 (already configured)
+- Remove unused S3 versions
+- Monitor data transfer
+- See [AWS-BEST-PRACTICES.md](AWS-BEST-PRACTICES.md) for optimization tips
+
+## Estimated Costs
+
+Based on typical traffic (1,000 monthly visitors):
+
+| Service | Monthly Cost |
+|---------|-------------|
+| S3 Storage | < $0.25 |
+| S3 Requests | < $0.50 |
+| CloudFront | < $10 |
+| **Total** | **< $11/month** |
+
+See [AWS-BEST-PRACTICES.md](AWS-BEST-PRACTICES.md) for detailed cost information.
+
+## Before Deploying to Production
+
+✅ Verify website works locally: `cd Website && python3 -m http.server`
+✅ Test in staging environment first  
+✅ Review [AWS-BEST-PRACTICES.md](AWS-BEST-PRACTICES.md)  
+✅ Enable CloudWatch monitoring  
+✅ Set up billing alerts  
+✅ Plan for backup and disaster recovery  
+✅ Review security settings  
+✅ Test with actual Custom domain (if using)  
+✅ Enable access logging  
+
+## Additional Resources
+
+- [AWS CloudFormation Documentation](https://docs.aws.amazon.com/cloudformation/)
+- [AWS S3 Static Website Hosting](https://docs.aws.amazon.com/AmazonS3/latest/userguide/WebsiteHosting.html)
+- [CloudFront Documentation](https://docs.aws.amazon.com/cloudfront/)
+- [AWS Security Best Practices](https://aws.amazon.com/architecture/security-identity-compliance/)
+- [AWS Pricing Calculator](https://calculator.aws/)
+- **[AWS Deployment Best Practices](AWS-BEST-PRACTICES.md)** ← Read this for production deployments!
+
+## Getting Help
+
+If you encounter issues:
+
+1. **Check deployment logs:**
+   ```bash
+   aws cloudformation describe-stack-events \
+     --stack-name clothetocare-website | head -20
+   ```
+
+2. **Enable CloudFront access logs** for debugging
+3. **Review S3 bucket policies** for access issues
+4. **Check AWS IAM permissions** for your user
+
+## Next Steps
+
+After successful deployment:
+
+1. ✅ Visit your website at the CloudFront URL
+2. ✅ Verify all pages load correctly
+3. ✅ Test on mobile devices
+4. ✅ Set up custom domain (optional)
+5. ✅ Enable CloudWatch monitoring
+6. ✅ Read [AWS-BEST-PRACTICES.md](AWS-BEST-PRACTICES.md) for advanced configurations
+
+---
+
+**Support**: For additional help, consult the [AWS-BEST-PRACTICES.md](AWS-BEST-PRACTICES.md) guide or AWS documentation.
 
 2. **Enable Static Website Hosting**:
    - Click on your bucket

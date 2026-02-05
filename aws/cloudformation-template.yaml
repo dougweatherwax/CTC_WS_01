@@ -25,26 +25,27 @@ Resources:
         IndexDocument: index.html
         ErrorDocument: 404.html
       PublicAccessBlockConfiguration:
-        BlockPublicAcls: false
-        BlockPublicPolicy: false
-        IgnorePublicAcls: false
-        RestrictPublicBuckets: false
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
       Tags:
         - Key: Project
           Value: ClotheToCore
         - Key: Environment
           Value: Production
 
-  # S3 Bucket Policy for public read access
+  # S3 Bucket Policy for CloudFront access only
   WebsiteBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref WebsiteBucket
       PolicyDocument:
         Statement:
-          - Sid: PublicReadGetObject
+          - Sid: CloudFrontReadAccess
             Effect: Allow
-            Principal: '*'
+            Principal:
+              AWS: !Sub 'arn:aws:iam::cloudfront:user/CloudFront Origin Access Identity ${CloudFrontOAI}'
             Action: 's3:GetObject'
             Resource: !Sub '${WebsiteBucket.Arn}/*'
 
@@ -69,29 +70,19 @@ Resources:
           - Id: S3Origin
             DomainName: !GetAtt WebsiteBucket.DomainName
             S3OriginConfig:
-              OriginAccessIdentity: ''
-            CustomOriginConfig:
-              HTTPPort: 80
-              HTTPSPort: 443
-              OriginProtocolPolicy: http-only
+              OriginAccessIdentity: !Sub 'origin-access-identity/cloudfront/${CloudFrontOAI}'
         DefaultCacheBehavior:
           TargetOriginId: S3Origin
           ViewerProtocolPolicy: redirect-to-https
           AllowedMethods:
             - GET
             - HEAD
-            - OPTIONS
           CachedMethods:
             - GET
             - HEAD
           Compress: true
-          ForwardedValues:
-            QueryString: false
-            Cookies:
-              Forward: none
-          MinTTL: 0
-          DefaultTTL: 3600
-          MaxTTL: 86400
+          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6'  # Managed-CachingOptimized
+          OriginRequestPolicyId: '216adef5-5c7f-47e4-b989-5492eafa07d3'  # Managed-CORS-S3Origin
         CustomErrorResponses:
           - ErrorCode: 404
             ResponseCode: 404

@@ -96,8 +96,22 @@ The website is ready for AWS deployment! See [AWS Deployment Guide](aws/DEPLOYME
 ## AWS Features Included
 
 ✅ S3 static website hosting configuration  
-✅ CloudFront CDN support (via CloudFormation)  
+✅ CloudFront CDN with Origin Access Identity (OAI) for secure access
+✅ CloudFormation Infrastructure as Code template  
 ✅ Custom 404 error page  
+✅ Optimized cache control headers for performance
+✅ HTTPS/SSL ready with AWS Certificate Manager
+✅ Automatic cache invalidation support
+✅ Security best practices implemented
+✅ Cost-optimized pricing tier (PriceClass_100)
+
+## AWS Security Features
+
+- **Origins Access Identity (OAI)**: Only CloudFront can access your S3 bucket
+- **Block Public Access**: S3 buckets are private by default
+- **CloudFront HTTPS**: Automatic HTTPS enforcement
+- **Security Headers**: Configured for XSS and clickjacking protection
+- **Access Logging**: CloudFront and S3 access logging available
 ✅ Automated deployment script  
 ✅ Bucket policy templates  
 ✅ Cache optimization  

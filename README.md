@@ -157,7 +157,7 @@ Consider adding:
 
 **Clothe to Care**  
 Serving Katy & Fulshear, Texas  
-Email: info@clothetocare.org
+Email: clothetocare@gmail.com
 
 ---
 

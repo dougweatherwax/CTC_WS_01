@@ -1,8 +1,26 @@
+// Parse CSV to JSON format
+function parseCSV(csv) {
+    const lines = csv.trim().split('\n');
+    const headers = lines[0].split(',');
+    const events = [];
+    
+    for (let i = 1; i < lines.length; i++) {
+        const obj = {};
+        const currentLine = lines[i].split(',');
+        for (let j = 0; j < headers.length; j++) {
+            obj[headers[j]] = currentLine[j];
+        }
+        events.push(obj);
+    }
+    return events;
+}
+
 // Load events data and update counters
 async function loadEventsAndUpdateCounters() {
     try {
-        const response = await fetch('data/events.json');
-        const events = await response.json();
+        const response = await fetch('data/events.csv');
+        const csv = await response.text();
+        const events = parseCSV(csv);
         
         // Calculate totals from events
         const totalFamiliesServed = events.reduce((sum, event) => {

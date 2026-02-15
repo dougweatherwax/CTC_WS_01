@@ -148,11 +148,29 @@
 
     <script src="js/script.js"></script>
     <script>
-        // Load events from JSON file
+        // Parse CSV to JSON format
+        function parseCSV(csv) {
+            const lines = csv.trim().split('\n');
+            const headers = lines[0].split(',');
+            const events = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const obj = {};
+                const currentLine = lines[i].split(',');
+                for (let j = 0; j < headers.length; j++) {
+                    obj[headers[j]] = currentLine[j];
+                }
+                events.push(obj);
+            }
+            return events;
+        }
+
+        // Load events from CSV file
         async function loadEvents() {
             try {
-                const response = await fetch('data/events.json');
-                const events = await response.json();
+                const response = await fetch('data/events.csv');
+                const csv = await response.text();
+                const events = parseCSV(csv);
                 displayEvents(events);
             } catch (error) {
                 console.error('Error loading events:', error);

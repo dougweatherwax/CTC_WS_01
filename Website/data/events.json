@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "title": "Community Clothing Drive",
+    "date": "2025-10-04",
+    "description": "Our first major clothing drive in partnership with Family Hope",
+    "image": "../images/event1.jpg"
+  },
+  {
+    "id": 2,
+    "title": "December Event",
+    "date": "2025-12-06",
+    "description": "Distributed clothing to families in need",
+    "image": "../images/event2.jpg"
+  },
+  {
+    "id": 3,
+    "title": "February Event",
+    "date": "2026-02-14",
+    "description": "Distributed clothing to families in need despite the rainy weather",
+    "image": "../images/event3.jpg"
+  }
+]

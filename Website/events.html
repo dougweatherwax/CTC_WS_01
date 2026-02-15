@@ -125,5 +125,40 @@
     </footer>
 
     <script src="js/script.js"></script>
+    <script>
+        // Load events from JSON file
+        async function loadEvents() {
+            try {
+                const response = await fetch('data/events.json');
+                const events = await response.json();
+                displayEvents(events);
+            } catch (error) {
+                console.error('Error loading events:', error);
+            }
+        }
+
+        function displayEvents(events) {
+            const gallery = document.getElementById('eventGallery');
+            
+            if (events.length === 0) {
+                gallery.innerHTML = '<div class="empty-gallery" style="grid-column: 1 / -1;"><p>More event photos coming soon! Stay tuned for updates from our community events.</p></div>';
+                return;
+            }
+
+            gallery.innerHTML = events.map(event => `
+                <div class="gallery-item">
+                    <img src="${event.image}" alt="${event.title}">
+                    <div class="gallery-item-caption">
+                        <h3>${event.title}</h3>
+                        <p><strong>Date:</strong> ${new Date(event.date).toLocaleDateString()}</p>
+                        <p>${event.description}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load events when page loads
+        document.addEventListener('DOMContentLoaded', loadEvents);
+    </script>
 </body>
 </html>

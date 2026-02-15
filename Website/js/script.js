@@ -1,5 +1,29 @@
+// Load events data and update counters
+async function loadEventsAndUpdateCounters() {
+    try {
+        const response = await fetch('data/events.json');
+        const events = await response.json();
+        
+        // Calculate total families served from events
+        const totalFamiliesServed = events.reduce((sum, event) => {
+            return sum + (parseInt(event.families_served) || 0);
+        }, 0);
+        
+        // Update the data-target for families served
+        const familiesServedElement = document.getElementById('familiesServed');
+        if (familiesServedElement) {
+            familiesServedElement.setAttribute('data-target', totalFamiliesServed);
+        }
+    } catch (error) {
+        console.error('Error loading events data:', error);
+    }
+}
+
 // Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', function() {
+    // Load events data first
+    loadEventsAndUpdateCounters();
+
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
 

@@ -4,15 +4,33 @@ async function loadEventsAndUpdateCounters() {
         const response = await fetch('data/events.json');
         const events = await response.json();
         
-        // Calculate total families served from events
+        // Calculate totals from events
         const totalFamiliesServed = events.reduce((sum, event) => {
             return sum + (parseInt(event.families_served) || 0);
         }, 0);
         
-        // Update the data-target for families served
+        const totalClothesDistributed = events.reduce((sum, event) => {
+            return sum + (parseInt(event.clothes_lbs_distributed) || 0);
+        }, 0);
+        
+        const totalHoursVolunteered = events.reduce((sum, event) => {
+            return sum + (parseInt(event.hours_volunteered) || 0);
+        }, 0);
+        
+        // Update all counters
         const familiesServedElement = document.getElementById('familiesServed');
         if (familiesServedElement) {
             familiesServedElement.setAttribute('data-target', totalFamiliesServed);
+        }
+        
+        const clothesDistributedElement = document.getElementById('clothesDistributed');
+        if (clothesDistributedElement) {
+            clothesDistributedElement.setAttribute('data-target', totalClothesDistributed);
+        }
+        
+        const hoursVolunteeredElement = document.getElementById('hoursVolunteered');
+        if (hoursVolunteeredElement) {
+            hoursVolunteeredElement.setAttribute('data-target', totalHoursVolunteered);
         }
     } catch (error) {
         console.error('Error loading events data:', error);

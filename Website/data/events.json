@@ -4,6 +4,8 @@
     "title": "Community Clothing Drive",
     "date": "2025-10-04",
     "families_served": "204",
+    "clothes_lbs_distributed": "306",
+    "hours_volunteered": "98",
     "description": "Our first major clothing drive in partnership with Family Hope",
     "image": "../images/event1.jpg"
   },
@@ -12,6 +14,8 @@
     "title": "December Event",
     "date": "2025-12-06",
     "families_served": "221",
+    "clothes_lbs_distributed": "332",
+    "hours_volunteered": "90",
     "description": "Distributed clothing to families in need",
     "image": "../images/event2.jpg"
   },
@@ -20,6 +24,8 @@
     "title": "February Event",
     "date": "2026-02-14",
     "families_served": "232",
+    "clothes_lbs_distributed": "348",
+    "hours_volunteered": "95",
     "description": "Distributed clothing to families in need despite the rainy weather",
     "image": "../images/event3.jpg"
   }
